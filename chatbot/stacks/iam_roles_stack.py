@@ -6,13 +6,20 @@ from constructs import Construct
 
 class RolesStack(Stack):
     def __init__(
-        self, scope: Construct, construct_id: str, project_name: str, **kwargs
+        self,
+        scope: Construct,
+        construct_id: str,
+        project_name: str,
+        storage: Stack,
+        **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         Tags.of(self).add(key="PROJECT", value="CHATBOT")
 
         self.project_name = project_name
+        self.knowledge_base_bucket = storage.knowledge_base_bucket
+
         self.api_lambda_role = self._create_api_lambda_role()
         self.knowledge_base_role = self._create_knowledge_base_role()
         self.processing_lambda_role = self._create_processing_lambda_role()
@@ -109,6 +116,8 @@ class RolesStack(Stack):
                 ],
             )
         )
+
+        self.knowledge_base_bucket.grant_read(role)
 
         return role
 

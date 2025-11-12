@@ -11,12 +11,19 @@ import os
 app = cdk.App()
 cdk_env = cdk.Environment(region=os.environ.get("CDK_DEFAULT_REGION", "us-east-1"))
 
-role_stack = RolesStack(
-    app, f"{env.PROJECT_NAME}-RoleStack", project_name=env.PROJECT_NAME, env=cdk_env
-)
 s3_stack = S3Stack(
     app, f"{env.PROJECT_NAME}-S3Stack", project_name=env.PROJECT_NAME, env=cdk_env
 )
+
+role_stack = RolesStack(
+    app,
+    f"{env.PROJECT_NAME}-RoleStack",
+    project_name=env.PROJECT_NAME,
+    env=cdk_env,
+    storage=s3_stack,
+)
+
+
 bedrock_stack = BedrockStack(
     app,
     f"{env.PROJECT_NAME}-BedrockStack",
@@ -25,6 +32,7 @@ bedrock_stack = BedrockStack(
     project_name=env.PROJECT_NAME,
     env=cdk_env,
 )
+
 api_gateway_stack = ApiGatewayStack(
     app,
     f"{env.PROJECT_NAME}-ApiGatewayStack",
@@ -32,7 +40,10 @@ api_gateway_stack = ApiGatewayStack(
     env=cdk_env,
 )
 
+role_stack.add_dependency(s3_stack)
 
 bedrock_stack.add_dependency(s3_stack)
 bedrock_stack.add_dependency(role_stack)
+
+
 app.synth()
