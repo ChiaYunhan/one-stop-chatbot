@@ -21,7 +21,6 @@ class BedrockStack(Stack):
         self.project_name = project_name
         self.storage = storage
         self.roles = roles
-        self.storage.knowledge_base_bucket.grant_read(self.roles.knowledge_base_role)
 
         self.vector_bucket = self._create_vector_bucket()
         self.vector_index = self._create_vector_index()
