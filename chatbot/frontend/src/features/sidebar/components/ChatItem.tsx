@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { ChatObject } from "../../../types";
+import { Ellipsis, PencilLine, Trash2 } from "lucide-react";
 
 interface ChatItemProps {
   chat: ChatObject;
@@ -25,18 +26,17 @@ export default function ChatItem({
   setEditingChatId,
 }: ChatItemProps) {
   const [editValue, setEditValue] = useState(chat.title);
+  const [isHover, setIsHovered] = useState(false);
 
   useEffect(() => {
     setEditValue(chat.title);
   }, [chat.title]);
 
   return (
-    <li
-      className={
-        isSelected
-          ? "chat-directory-list-item active"
-          : "chat-directory-list-item"
-      }
+    <div
+      className={`chat-item ${isSelected ? "selected" : ""}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onSelect(chat.id)}
     >
       {isEditingMode ? (
@@ -65,41 +65,39 @@ export default function ChatItem({
       )}
       <button
         className={
-          isKebabMenuOpen
-            ? "chat-item-kebab-menu active"
-            : "chat-item-kebab-menu"
+          isKebabMenuOpen ? "kebab-menu-button active" : "kebab-menu-button"
         }
         onClick={(e) => {
           e.stopPropagation();
           setOpenMenuId(chat.id);
         }}
       >
-        kebab
+        <Ellipsis size={18} />
       </button>
       {isKebabMenuOpen && (
         <div>
           <button
-            className="chat-item-kebab-item"
+            className="kebab-menu-button-item"
             onClick={(e) => {
               e.stopPropagation();
               setEditingChatId(chat.id);
               setOpenMenuId(null);
             }}
           >
-            Rename
+            <PencilLine size={18} />
           </button>
           <button
-            className="chat-item-kebab-item"
+            className="kebab-menu-button-item"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(chat.id);
               setOpenMenuId(null);
             }}
           >
-            Delete
+            <Trash2 size={18} />
           </button>
         </div>
       )}
-    </li>
+    </div>
   );
 }

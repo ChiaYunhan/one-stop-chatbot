@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { type ViewType, type ChatObject } from "./types";
+import { type ViewType, type ChatObject, type MessageObject } from "./types";
 import Sidebar from "./features/sidebar/Sidebar";
 import KnowledgeBase from "./features/knowledgeBase/KnowledgeBase";
 import Chat from "./features/chat/Chat";
@@ -52,6 +52,22 @@ function App() {
     });
   }
 
+  function handleUpdateChatMessageList(id: string, newMessage: MessageObject) {
+    setChats((prevChats) => {
+      if (!prevChats[id]) {
+        return prevChats; // No-op, return unchanged state
+      }
+      return {
+        ...prevChats,
+        [id]: {
+          ...prevChats[id],
+          updatedAt: new Date(),
+          messages: [...prevChats[id].messages, newMessage],
+        },
+      };
+    });
+  }
+
   function _createChatObject(newId: string) {
     const currentDateTime: Date = new Date();
     return {
@@ -60,6 +76,8 @@ function App() {
       messages: [],
       createdAt: currentDateTime,
       updatedAt: currentDateTime,
+      inputToken: 0,
+      outputToken: 0,
     };
   }
 
@@ -91,20 +109,18 @@ function App() {
           handleSetActiveView={handleSetActiveView}
         />
       </div>
-
-      {/* <div className="main-content">
+      <div className="main-content">
         {activeView === "knowledgeBase" ? (
           <KnowledgeBase />
-        ) : (
+        ) : selectedChatId && chats[selectedChatId] ? (
           <Chat
-            selectedChat={
-              selectedChatId && Object.keys(chats).length > 0
-                ? chats[selectedChatId]
-                : null
-            }
+            selectedChat={chats[selectedChatId]}
+            handleUpdateChatMessageList={handleUpdateChatMessageList}
           />
+        ) : (
+          <div>Select a chat to get started</div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

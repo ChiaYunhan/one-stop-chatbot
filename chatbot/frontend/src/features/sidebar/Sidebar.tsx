@@ -23,7 +23,7 @@ export default function Sidebar({
   handleSetActiveView,
 }: SidebarProps) {
   return (
-    <div>
+    <>
       <KnowledgeBaseButton handleSetActiveView={handleSetActiveView} />
       <ChatDirectory
         chats={chats}
@@ -33,6 +33,6 @@ export default function Sidebar({
         handleRenameChat={handleRenameChat}
         handleSelectChat={handleSelectChat}
       />
-    </div>
+    </>
   );
 }

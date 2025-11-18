@@ -16,7 +16,7 @@ export type ChatRole = "USER" | "ASSISTANT";
 
 export type ViewType = "knowledgeBase" | "chat";
 
-export interface Message {
+export interface MessageObject {
   id: string;
   role: ChatRole;
   content: string;
@@ -26,9 +26,11 @@ export interface Message {
 export interface ChatObject {
   id: string;
   title: string;
-  messages: Message[];
+  messages: MessageObject[];
   createdAt: Date;
   updatedAt: Date;
+  inputToken: number;
+  outputToken: number;
 }
 
 export interface Document {
