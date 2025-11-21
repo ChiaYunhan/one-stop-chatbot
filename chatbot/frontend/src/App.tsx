@@ -76,27 +76,10 @@ function App() {
       messages: [],
       createdAt: currentDateTime,
       updatedAt: currentDateTime,
-      inputToken: 0,
-      outputToken: 0,
     };
   }
 
   return (
-    // sidebar
-    // width will be 10%, adjustable later one
-    // two containers? knowledge base and chat
-    // knowledge base is a single element in the sidebar. fixed
-    // chat will have two sub containers, the first will just have "Chats [plus icon]" plus icon will create new chat and set selectchatid
-    // potentially a sort function in the future
-
-    // only one will be displayed at a time
-
-    // knowledge base
-    // three containers, top, left and right
-
-    // chat
-    // display current content from selectedChatId, if content is empty list then show a default starting chat page
-
     <div className="app-container">
       <div className="sidebar">
         <Sidebar
