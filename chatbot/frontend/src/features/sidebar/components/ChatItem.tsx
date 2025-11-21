@@ -26,7 +26,6 @@ export default function ChatItem({
   setEditingChatId,
 }: ChatItemProps) {
   const [editValue, setEditValue] = useState(chat.title);
-  const [isHover, setIsHovered] = useState(false);
 
   useEffect(() => {
     setEditValue(chat.title);
@@ -35,8 +34,6 @@ export default function ChatItem({
   return (
     <div
       className={`chat-item ${isSelected ? "selected" : ""}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onSelect(chat.id)}
     >
       {isEditingMode ? (

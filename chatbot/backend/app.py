@@ -23,7 +23,6 @@ role_stack = RolesStack(
 
 layer_stack = LambdaLayerStack(app, f"{env.PROJECT_NAME}-LayerStack", env=cdk_env)
 
-
 bedrock_stack = BedrockStack(
     app,
     f"{env.PROJECT_NAME}-BedrockStack",
@@ -41,6 +40,7 @@ api_gateway_stack = ApiGatewayStack(
     env=cdk_env,
 )
 
+# Dependencies
 role_stack.add_dependency(s3_stack)
 
 bedrock_stack.add_dependency(s3_stack)
@@ -48,5 +48,7 @@ bedrock_stack.add_dependency(role_stack)
 
 api_gateway_stack.add_dependency(layer_stack)
 api_gateway_stack.add_dependency(bedrock_stack)
+
+# Frontend is handled by frontend_app.py
 
 app.synth()

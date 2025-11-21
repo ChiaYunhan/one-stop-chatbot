@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { RefreshCcw } from "lucide-react";
 import { triggerSyncKnowledgeBase } from "../../services/KnowledgeBaseApi";
 
 interface SyncResponse {
@@ -43,7 +42,7 @@ export default function SyncKnowledgeBaseButton() {
       disabled={isSyncing}
       title="Sync Knowledge Base"
     >
-      <RefreshCcw size={18} />
+      Sync Knowledge Base
     </button>
   );
 }

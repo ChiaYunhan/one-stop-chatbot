@@ -18,7 +18,7 @@ export type ChatRole = "USER" | "ASSISTANT";
 export type ViewType = "knowledgeBase" | "chat";
 
 export interface CitationObject {
-  text: string;
+  page: number;
   file: string;
 }
 
@@ -26,7 +26,7 @@ export interface MessageObject {
   id: string;
   role: ChatRole;
   content: string;
-  citation?: CitationObject[];
+  citation: CitationObject[];
   timestamp: Date;
 }
 

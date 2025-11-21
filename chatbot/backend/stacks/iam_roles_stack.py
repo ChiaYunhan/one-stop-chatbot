@@ -125,7 +125,7 @@ class RolesStack(Stack):
             self,
             f"{PROJECT_NAME}-ProcessingLambdaRole",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
-            description="Role for processing lambdas that interact with bedrock, s3 and dynamodb",
+            description="Role for processing lambdas that interact with bedrock",
         )
 
         role.add_to_policy(

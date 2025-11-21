@@ -1,6 +1,5 @@
 # api_gateway_stack.py
 
-from asyncio import timeout_at
 from aws_cdk import (
     Stack,
     aws_lambda as lambda_,
@@ -9,10 +8,12 @@ from aws_cdk import (
     aws_logs as logs,
     Duration,
     Tags,
+    CfnOutput,
 )
 from datetime import datetime
 from .environment import *
 from constructs import Construct
+
 
 THROTTLE_RATE_LIMIT = 10
 THROTTLE_BURST_LIMIT = 20
@@ -167,6 +168,28 @@ class ApiGatewayStack(Stack):
             log_retention=logs.RetentionDays(LOG_RETENTION_DAYS),
         )
 
+        QueryKnowledgeBase = lambda_.Function(
+            self,
+            id=f"{PROJECT_NAME}-QueryKnowledgeBase",
+            function_name=f"{PROJECT_NAME}-QueryKnowledgeBase",
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            handler="lambda_function.lambda_handler",
+            code=lambda_.Code.from_asset(lambda_dir + "QueryKnowledgeBase"),
+            layers=[LambdaCoreLayer],
+            description="Function to query knowledge base for chat",
+            role=roles.api_lambda_role,
+            environment={
+                "KNOWLEDGE_BASE_ID": bedrock.knowledge_base.get_response_field(
+                    "knowledgeBase.knowledgeBaseId"
+                ),
+                "MODEL_ARN": "arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-lite-v1:0",
+            },
+            timeout=Duration.seconds(30),
+            tracing=lambda_.Tracing.ACTIVE,
+            memory_size=128,
+            log_retention=logs.RetentionDays(LOG_RETENTION_DAYS),
+        )
+
         ############################################
 
         #                API GATEWAY               #
@@ -194,7 +217,16 @@ class ApiGatewayStack(Stack):
             ),
         )
 
-        # POST /documents
+        # POST /chat
+        ChatApiResource = ApiGateWay.root.add_resource("chat")
+        QueryKnowledgeBaseFunctionIntegration = apigateway.LambdaIntegration(
+            QueryKnowledgeBase
+        )
+        QueryKnowledgeBasePostApiMethod = ChatApiResource.add_method(
+            "POST", QueryKnowledgeBaseFunctionIntegration
+        )
+
+        # /documents
         DocumentApiResource = ApiGateWay.root.add_resource("documents")
 
         # POST /documents/list
@@ -292,4 +324,14 @@ class ApiGatewayStack(Stack):
                 rate_limit=THROTTLE_RATE_LIMIT,
                 burst_limit=THROTTLE_BURST_LIMIT,
             ),
+        )
+
+        self.api_url = f"https://{ApiGateWay.rest_api_id}.execute-api.{self.region}.amazonaws.com/{ApiGateWayStage.stage_name}"
+
+        CfnOutput(
+            self,
+            "ApiUrl",
+            value=self.api_url,
+            description="API Gateway URL",
+            export_name=f"{PROJECT_NAME}-ApiUrl",
         )

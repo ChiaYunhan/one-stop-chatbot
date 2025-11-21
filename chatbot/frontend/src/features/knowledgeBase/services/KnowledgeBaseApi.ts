@@ -2,17 +2,15 @@ import type {
   DocumentObject,
   ListDocumentObjectResponse,
 } from "../../../types";
+import { API_BASE_URL } from "../../../config";
 
 export async function getKnowledgeBaseDocuments(): Promise<ListDocumentObjectResponse> {
-  const response = await fetch(
-    "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/list",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${API_BASE_URL}/documents/list`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return response.json();
 }
@@ -22,7 +20,7 @@ export const getViewDocumentS3Link = async (
   signal?: AbortSignal
 ) => {
   const response = await fetch(
-    "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/downloadpresignedurl",
+    `${API_BASE_URL}/documents/downloadpresignedurl`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,7 +39,7 @@ export const getDownloadDocumentS3Link = async (
   signal?: AbortSignal
 ) => {
   const response = await fetch(
-    "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/downloadpresignedurl",
+    `${API_BASE_URL}/documents/downloadpresignedurl`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -73,18 +71,15 @@ export const deleteDocuments = async (
   documents: DocumentObject[]
 ): Promise<DeleteDocumentsResponse> => {
   try {
-    const response = await fetch(
-      "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/delete",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          documents,
-        }),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/documents/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        documents,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -99,13 +94,10 @@ export const deleteDocuments = async (
 };
 
 export const triggerSyncKnowledgeBase = async () => {
-  const response = await fetch(
-    "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/sync",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  const response = await fetch(`${API_BASE_URL}/documents/sync`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
 
   return response;
 };

@@ -4,7 +4,7 @@ import { getViewDocumentS3Link } from "../../services/KnowledgeBaseApi";
 import { PDFSkeleton } from "./PDFSkeleton";
 
 interface PDFViewerProps {
-  selectedDocument: DocumentObject | undefined;
+  selectedDocument: DocumentObject;
 }
 
 export default function PDFViewer({ selectedDocument }: PDFViewerProps) {

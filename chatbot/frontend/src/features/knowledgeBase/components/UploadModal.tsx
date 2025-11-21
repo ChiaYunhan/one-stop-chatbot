@@ -15,7 +15,6 @@ function UploadModal() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
   const [uploadResults, setUploadResults] = useState<UploadResult[]>([]);
 
   const openModal = () => {
@@ -131,7 +130,7 @@ function UploadModal() {
           type="file"
           onChange={handleFileChange}
           multiple
-          disabled={isUploading || isSyncing}
+          disabled={isUploading}
           accept=".pdf,.png,.jpg,.jpeg"
         />
 
@@ -175,9 +174,9 @@ function UploadModal() {
           <button
             className="kb-upload-button"
             onClick={handleUpload}
-            disabled={isUploading || isSyncing || selectedFiles.length === 0}
+            disabled={isUploading || selectedFiles.length === 0}
           >
-            {isUploading ? "Uploading..." : isSyncing ? "Syncing..." : "Upload"}
+            {isUploading ? "Uploading..." : "Upload"}
           </button>
 
           <button

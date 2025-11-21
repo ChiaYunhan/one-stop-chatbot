@@ -1,6 +1,8 @@
+import { useState } from "react";
 import UploadModal from "../UploadModal";
 import SyncKnowledgeBaseButton from "./SyncKnowledgeBaseButton";
-import type { DocumentObject } from "../../../types";
+import type { DocumentObject } from "../../../../types";
+import { getKnowledgeBaseDocuments } from "../../services/KnowledgeBaseApi";
 
 interface TopBarProps {
   inSelectionView: boolean;
@@ -12,6 +14,7 @@ interface TopBarProps {
   onCancel: () => void;
   isDeleting: boolean;
   selectedDocuments: DocumentObject[];
+  setDocumentList: (documentList: DocumentObject[]) => void;
 }
 
 export default function TopBar({
@@ -24,7 +27,10 @@ export default function TopBar({
   onCancel,
   isDeleting,
   selectedDocuments,
+  setDocumentList,
 }: TopBarProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // Helper to check if any selected documents have a specific status
   const hasDocumentsWithStatus = (status: string) => {
     return selectedDocuments.some((doc) => doc.status === status);
@@ -35,7 +41,10 @@ export default function TopBar({
     if (isDeleting) return "Deleting...";
 
     const processingCount = selectedDocuments.filter(
-      (doc) => doc.status === "PROCESSING" || doc.status === "INDEXING"
+      (doc) =>
+        doc.status === "STARTING" ||
+        doc.status === "IN_PROGRESS" ||
+        doc.status === "PENDING"
     ).length;
 
     if (processingCount > 0) {
@@ -43,6 +52,19 @@ export default function TopBar({
     }
 
     return `Delete Selected (${selectedCount})`;
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await getKnowledgeBaseDocuments();
+      setDocumentList(response.documentDetails);
+    } catch (error) {
+      console.error("Failed to refresh documents:", error);
+      alert("Failed to refresh documents. Please try again.");
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   if (inSelectionView) {
@@ -101,6 +123,21 @@ export default function TopBar({
   return (
     <div className="Knowledge-base-top-bar">
       <UploadModal />
+      <button
+        onClick={handleRefresh}
+        disabled={isRefreshing}
+        className="kb-icon-btn"
+        title="Sync Document List"
+      >
+        {isRefreshing ? (
+          <>
+            <span className="spinner"></span>
+            Refreshing...
+          </>
+        ) : (
+          "Sync Document List"
+        )}
+      </button>
       <SyncKnowledgeBaseButton />
       <button
         className="knowledge-base-top-bar-select"

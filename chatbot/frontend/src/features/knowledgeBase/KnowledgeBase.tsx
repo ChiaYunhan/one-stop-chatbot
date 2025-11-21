@@ -1,14 +1,17 @@
 import type { DocumentObject } from "../../types";
 import { useEffect, useState } from "react";
-import { getKnowledgeBaseDocuments } from "./services/KnowledgeBaseApi";
 import { deleteDocuments } from "./services/KnowledgeBaseApi";
 
 import TopBar from "./components/TopBar/TopBar";
 import DocumentList from "./components/DocumentList";
 import PDFViewer from "./components/PDFViewer/PDFViewer";
 
-function KnowledgeBase() {
-  const [documentList, setDocumentList] = useState<DocumentObject[]>([]);
+interface KnowledgeBaseProps {
+  documentList: DocumentObject[];
+  setDocumentList: (documentList: DocumentObject[]) => void;
+}
+
+function KnowledgeBase({ documentList, setDocumentList }: KnowledgeBaseProps) {
   const [selectedDocId, setDocId] = useState<string | null>(null);
   const [inSelectionView, setInSelectionView] = useState<boolean>(false);
   const [selectedDocuments, setSelectedDocuments] = useState<DocumentObject[]>(
@@ -17,15 +20,6 @@ function KnowledgeBase() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const selectedDocument = documentList.find((doc) => doc.id === selectedDocId);
-
-  useEffect(() => {
-    async function fetchDocs() {
-      const response = await getKnowledgeBaseDocuments("");
-      setDocumentList(response.documentDetails);
-    }
-
-    fetchDocs();
-  }, []);
 
   // Clear selections when exiting selection mode
   useEffect(() => {
@@ -87,9 +81,10 @@ function KnowledgeBase() {
           .filter((doc) => !result.failedIds.includes(doc.id))
           .map((doc) => doc.id);
 
-        setDocumentList((prev) =>
-          prev.filter((doc) => !deletedIds.includes(doc.id))
+        const updatedDocumentList = documentList.filter(
+          (doc) => !deletedIds.includes(doc.id)
         );
+        setDocumentList(updatedDocumentList);
 
         // Clear selected document if it was deleted
         if (selectedDocId && deletedIds.includes(selectedDocId)) {
@@ -100,11 +95,6 @@ function KnowledgeBase() {
         let message = `${result.deletedCount} document(s) deleted successfully`;
         if (result.failedIds.length > 0) {
           message += `\n${result.failedIds.length} document(s) failed to delete`;
-          if (result.failedDocuments && result.failedDocuments.length > 0) {
-            message += `:\n${result.failedDocuments
-              .map((doc) => `- ${doc.displayName} (Status: ${doc.status})`)
-              .join("\n")}`;
-          }
         }
         alert(message);
 
@@ -145,6 +135,7 @@ function KnowledgeBase() {
           onCancel={handleCancelSelection}
           isDeleting={isDeleting}
           selectedDocuments={selectedDocuments}
+          setDocumentList={setDocumentList}
         />
       </div>
       <div className="knowledge-base-main">
@@ -155,7 +146,9 @@ function KnowledgeBase() {
           inSelectionView={inSelectionView}
           selectedDocuments={selectedDocumentIds}
         />
-        {!inSelectionView && <PDFViewer selectedDocument={selectedDocument} />}
+        {!inSelectionView && selectedDocument && (
+          <PDFViewer selectedDocument={selectedDocument} />
+        )}
       </div>
     </div>
   );
