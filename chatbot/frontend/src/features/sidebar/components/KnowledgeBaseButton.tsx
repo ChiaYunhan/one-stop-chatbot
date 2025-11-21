@@ -1,4 +1,5 @@
 import type { ViewType } from "../../../types";
+import { Database } from "lucide-react";
 
 interface KnowledgeBaseButtonProps {
   handleSetActiveView: (view: ViewType) => void;
@@ -9,10 +10,11 @@ export default function KnowledgeBaseButton({
 }: KnowledgeBaseButtonProps) {
   return (
     <button
-      id="KnowledgeBaseButton"
+      className="knowledge-base-button"
       onClick={() => handleSetActiveView("knowledgeBase")}
     >
-      Knowledge Base
+      <Database size={18} />
+      <span>Knowledge Base</span>
     </button>
   );
 }

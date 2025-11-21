@@ -4,6 +4,7 @@ aws-cdk-lib==2.222.0
 aws-cdk.asset-awscli-v1==2.2.242
 aws-cdk.asset-node-proxy-agent-v6==2.1.0
 aws-cdk.cloud-assembly-schema==48.18.0
+aws_lambda_powertools==3.23.0
 boto3==1.40.64
 botocore==1.40.69
 cattrs==25.3.0

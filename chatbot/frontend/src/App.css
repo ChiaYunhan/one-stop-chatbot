@@ -19,7 +19,7 @@ body {
 }
 
 .sidebar {
-  width: 25%;
+  width: 20%;
   min-width: 240px;
   background: #171717;
   border-right: 1px solid #2a2a2a;
@@ -105,7 +105,6 @@ body {
   min-height: 0;
   padding-top: 8px;
 }
-
 
 /* Clean scrollbar for dark theme */
 .chat-list::-webkit-scrollbar {
@@ -213,7 +212,6 @@ body {
   color: #e5e5e5;
 }
 
-
 /* Chat container - full height, flex column */
 .chat-container {
   display: flex;
@@ -300,7 +298,6 @@ body {
   border: 1px solid #857676;
 }
 
-
 .chat-input-container {
   padding: 16px;
   background: #1e1e1e;
@@ -380,4 +377,803 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
   background: #4a4a4a;
+}
+
+/* Knowledge Base Layout Styles */
+.knowledge-base-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e1e;
+}
+
+.knowledge-base-top {
+  flex-shrink: 0; /* Don't shrink the top bar */
+  background: #1e1e1e;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.knowledge-base-main {
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  height: 0; /* Important: allows flex child to grow */
+  min-height: 0; /* Important: allows flex child to shrink */
+}
+
+/* Ensure DocumentList and PDFViewer split the space 50/50 */
+.knowledge-base-main > * {
+  flex: 1; /* Equal flex for both sides */
+  height: 100%;
+  min-width: 0; /* Allow shrinking below content size */
+}
+
+/* DocumentList takes 50% of space */
+.knowledge-base-main > *:first-child {
+  flex: 1; /* Equal space - 50% */
+  min-width: 300px; /* Minimum width to remain usable */
+  max-width: none; /* Remove max-width restriction */
+}
+
+/* PDFViewer takes remaining 50% of space */
+.knowledge-base-main > *:last-child {
+  flex: 1; /* Equal space - 50% */
+  min-width: 400px; /* Minimum width for PDF viewer */
+}
+
+/* =============================================================================
+   SELECTION MODE STYLES - Integrated with Dark Theme
+   ============================================================================= */
+
+/* Top Bar Selection Mode */
+.Knowledge-base-top-bar {
+  padding: 12px 16px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 56px;
+}
+
+.knowledge-base-top-bar-select {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e5e5e5;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.knowledge-base-top-bar-select:hover{
+  background: #d97706;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a2a2a;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.Knowledge-base-top-bar.selection-mode {
+  background: #2d1810; /* Dark orange tint */
+  border-bottom: 1px solid #d97706;
+  padding: 12px 16px;
+  border-radius: 0;
+}
+
+.selection-info {
+  font-weight: 500;
+  color: #d97706; /* Orange accent */
+  font-size: 14px;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.selection-actions button {
+  padding: 8px 16px;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  background: #2a2a2a;
+  color: #e5e5e5;
+}
+
+.selection-actions button:hover:not(:disabled) {
+  background: #3a3a3a;
+  border-color: #4a4a4a;
+}
+
+.selection-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #1a1a1a;
+  color: #6b7280;
+}
+
+.delete-btn {
+  background: #dc2626 !important; /* Red for delete */
+  color: white !important;
+  border-color: #dc2626 !important;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.cancel-btn {
+  background: #374151 !important; /* Gray for cancel */
+  color: white !important;
+  border-color: #374151 !important;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #4b5563 !important;
+  border-color: #4b5563 !important;
+}
+
+.view-controls{
+  padding: "12px";
+  border-bottom: "1px solid #2a2a2a";
+}
+
+/* View Toggle Buttons (Future: for switching between list and grid view) */
+.view-toggle {
+  display: flex;
+  background: #2a2a2a;
+  flex:1;
+}
+
+.view-toggle button {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 14px;
+  font-weight: 500;
+  flex:1;
+}
+
+.view-toggle button.active {
+  background: #d97706;
+  color: #1c1c1d;
+}
+
+.view-toggle button:hover:not(.active) {
+  background: #3a3a3a;
+  color: #e5e5e5;
+}
+
+/* Loading spinner for delete operations */
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Document List Selection Mode */
+.knowledge-base-document-list {
+  padding: 12px;
+  background: #1e1e1e;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0; /* Allow shrinking */
+  width: 100%; /* Take available width */
+}
+
+/* Future: Alternative grid layout for PDF icon view */
+.knowledge-base-document-list.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.knowledge-base-document-list.selection-mode {
+  user-select: none;
+  background: #1a1a1a;
+}
+
+.knowledge-base-document-list.selection-mode::before {
+  content: "Selection Mode - Click to select/deselect documents";
+  display: block;
+  padding: 8px 12px;
+  background: #2d1810; /* Dark orange tint */
+  border: 1px solid #d97706;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #d97706;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Document Item Styles */
+.knowledge-base-document-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #1e1e1e;
+  color: #e5e5e5;
+  min-width: 0; /* Important: allows flex items to shrink below content size */
+}
+
+
+.knowledge-base-document-item:hover {
+  background: #2a2a2a;
+  border-color: #3a3a3a;
+}
+
+/* Selected state in normal mode */
+.knowledge-base-document-item.selected {
+  background: #af0909;
+  border-left: 3px solid #d97706;
+  padding-left: 9px; /* Compensate for border */
+}
+
+.knowledge-base-document-item.selected:hover {
+  background: #851616;
+}
+
+/* Selection mode styles */
+.knowledge-base-document-item.selection-mode {
+  border: 2px solid transparent;
+  padding-left: 16px;
+  background: #1a1a1a;
+}
+
+.knowledge-base-document-item.selection-mode:hover {
+  border-color: #d97706;
+  background: #2d1810;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+}
+
+.knowledge-base-document-item.selection-mode.selected {
+  background: #3d2917; /* Dark orange selected state */
+  border-color: #d97706;
+  box-shadow: 0 2px 12px rgba(217, 119, 6, 0.2);
+}
+
+/* Checkbox styling */
+.document-checkbox {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Don't shrink the checkbox */
+}
+
+.document-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #d97706; /* Orange accent */
+  transform: scale(1);
+  transition: transform 0.1s ease;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 3px;
+}
+
+.document-checkbox input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+.document-checkbox input[type="checkbox"]:focus {
+  outline: 2px solid #d97706;
+  outline-offset: 2px;
+}
+
+/* Document content area */
+.document-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0; /* Important: allows flex child to shrink */
+  overflow: hidden; /* Ensure overflow is handled */
+}
+
+.document-name {
+  font-size: 14px;
+  color: #e5e5e5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* Take full available width */
+  min-width: 0; /* Allow shrinking */
+}
+
+.knowledge-base-document-item.selection-mode .document-name {
+  font-weight: 500;
+}
+
+.knowledge-base-document-item.selection-mode.selected .document-name {
+  color: #fbbf24; /* Lighter orange for selected text */
+}
+
+/* Future: PDF Icon Layout Styles */
+.knowledge-base-document-item.icon-view {
+  flex-direction: column;
+  text-align: center;
+  padding: 16px 12px;
+  min-height: 100px;
+  justify-content: center;
+}
+
+.knowledge-base-document-item.icon-view .document-content {
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.knowledge-base-document-item.icon-view .document-icon {
+  width: 48px;
+  height: 48px;
+  background: #d97706;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1c1c1d;
+  font-size: 24px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.knowledge-base-document-item.icon-view .document-name {
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 2.6em; /* 2 lines * 1.3 line-height */
+}
+
+.knowledge-base-document-item.icon-view .document-checkbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  margin: 0;
+}
+
+/* PDF Viewer Styles */
+.pdf-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  background: #1a1a1a;
+  color: #e0e0e0;
+  overflow: hidden;
+  flex: 1; /* Add this */
+  border-left: 1px solid #2a2a2a;
+}
+
+.pdf-viewer-container.inactive {
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.pdf-viewer-container.error {
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-viewer-container.active {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  height: 100%; /* Ensure full height */
+}
+
+.pdf-viewer-empty-state,
+.pdf-viewer-error-state {
+  text-align: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+.pdf-viewer-empty-state h3,
+.pdf-viewer-error-state h3 {
+  margin-bottom: 0.5rem;
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.pdf-viewer-error-state h3 {
+  color: #ff6b6b;
+}
+
+.pdf-viewer-empty-state p,
+.pdf-viewer-error-state p {
+  color: #888;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.pdf-viewer-error-state button {
+  background: #d97706;
+  color: #1c1c1d;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.pdf-viewer-error-state button:hover {
+  background: #ff9f32;
+}
+
+.pdf-viewer-error-state button:active {
+  background: #b45309;
+}
+
+.pdf-viewer-error-state button:focus {
+  outline: 2px solid #d97706;
+  outline-offset: 2px;
+}
+
+/* iframe styles for PDF viewing */
+.pdf-viewer-container.active iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+  display: block;
+  flex: 1;
+}
+
+.pdf-viewer-container.active iframe:focus {
+  outline: 2px solid #d97706;
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling for document list */
+.knowledge-base-document-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.knowledge-base-document-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.knowledge-base-document-list::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+.knowledge-base-document-list::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+/* Focus styles for accessibility */
+.selection-actions button:focus {
+  outline: 2px solid #d97706;
+  outline-offset: 2px;
+}
+
+/* Empty state in selection mode */
+.knowledge-base-document-list.selection-mode:empty::after {
+  content: "No documents available for selection";
+  display: block;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Responsive design updates */
+@media (max-width: 768px) {
+  .selection-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .selection-actions button {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .Knowledge-base-top-bar.selection-mode {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .selection-info {
+    text-align: center;
+  }
+
+  .pdf-viewer-empty-state,
+  .pdf-viewer-error-state {
+    padding: 1rem;
+  }
+  
+  .pdf-viewer-empty-state h3,
+  .pdf-viewer-error-state h3 {
+    font-size: 1.1rem;
+  }
+  
+  .pdf-viewer-error-state button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .knowledge-base-main {
+    flex-direction: column; /* Stack vertically on mobile */
+  }
+
+  /* On mobile, both sections take full width when stacked */
+  .knowledge-base-main > *:first-child,
+  .knowledge-base-main > *:last-child {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+
+  /* Adjust heights for mobile stacking */
+  .knowledge-base-main > *:first-child {
+    flex: 0 0 40vh; /* Document list takes 40% of viewport height */
+  }
+
+  .knowledge-base-main > *:last-child {
+    flex: 1; /* PDF viewer takes remaining space */
+    min-height: 300px;
+  }
+
+  .document-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Grid view adjustments for mobile */
+  .knowledge-base-document-list.grid-view {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+.pdf-viewer-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 4px;
+}
+
+.pdf-viewer-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* =======================
+   Shared Icon Button
+   ======================= */
+.kb-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  color: #e5e5e5;
+  transition: all 0.15s ease;
+}
+
+.kb-icon-btn:hover:not(:disabled) {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.kb-icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =======================
+   Upload Modal Styling
+   ======================= */
+.kb-upload-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;            /* <— important */
+  align-items: center;      /* <— keeps modal centered */
+  justify-content: center;  /* <— centers horizontally */
+  background: #413a2e;
+  z-index: 9999;            /* <— ensure it’s above everything */
+}
+
+.kb-upload-modal {
+  position: relative;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 480px;
+  width: 90%;
+  outline: none;
+  z-index: 10000;
+}
+
+.kb-upload-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #e5e5e5;
+}
+
+.kb-upload-input {
+  width: 100%;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  padding: 10px;
+  border-radius: 6px;
+  color: #e5e5e5;
+  cursor: pointer;
+}
+
+.ReactModal__Content {
+  background: #1e1e1e !important;
+}
+
+
+/* Selected files */
+.kb-upload-selected-list-container {
+  margin-top: 15px;
+  color:#e5e5e5;
+}
+
+.kb-upload-selected-list {
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  background: #1a1a1a;
+  
+}
+
+.kb-upload-selected-list li {
+  padding: 4px 0;
+}
+
+.kb-upload-results-container {
+  color: #e5e5e5
+}
+
+/* Upload results */
+.kb-upload-results-list {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.kb-success {
+  color: #22c55e;
+}
+
+.kb-error {
+  color: #ef4444;
+}
+
+/* Buttons */
+.kb-upload-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.kb-upload-button {
+  flex: 1;
+  background: #d97706;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #1c1c1d;
+  transition: background 0.15s ease;
+}
+
+.kb-upload-button:hover:not(:disabled) {
+  background: #ff9f32;
+}
+
+.kb-upload-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.kb-cancel-button {
+  background: #3a3a3a;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #e5e5e5;
+  transition: background 0.15s ease;
+}
+
+.kb-cancel-button:hover {
+  background: #4a4a4a;
+}
+
+.message-header {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom:1px solid #f0e7e7;
+  padding: 2px;
+  gap:30px;
+}
+
+.message-role{
+  font-weight: 700;
+}
+
+.message-timestamp {
+  
+font-weight: 400;}
+
+.message-citations {
+ border-top:1px solid #f0e7e7;
+ padding-top:10px;
+ margin-top: 20px;
+}
+.message-content {
+ padding-top:4px;
+ margin-top: 3px;
 }

@@ -8,6 +8,7 @@ interface ChatInputBox {
   selectedChat: ChatObject;
   handleSetInputBox: (inputBoxValue: string) => void;
   handleUserNewMessage: (selectedChatId: string, inputBoxValue: string) => void;
+  disabled: boolean;
 }
 
 export default function ChatInputBox({
@@ -16,6 +17,7 @@ export default function ChatInputBox({
   selectedChat,
   handleSetInputBox,
   handleUserNewMessage,
+  disabled,
 }: ChatInputBox) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -40,7 +42,7 @@ export default function ChatInputBox({
         className="chat-input"
         value={inputBoxValue}
         placeholder="How can I help you today?"
-        disabled={isLoading}
+        disabled={disabled && isLoading}
         onChange={(e) => handleSetInputBox(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey && inputBoxValue.trim()) {

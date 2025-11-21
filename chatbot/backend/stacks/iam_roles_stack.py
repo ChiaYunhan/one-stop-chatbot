@@ -2,6 +2,7 @@
 
 from aws_cdk import Stack, aws_iam as iam, Tags
 from constructs import Construct
+from .environment import *
 
 
 class RolesStack(Stack):
@@ -9,15 +10,13 @@ class RolesStack(Stack):
         self,
         scope: Construct,
         construct_id: str,
-        project_name: str,
         storage: Stack,
         **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        Tags.of(self).add(key="PROJECT", value="CHATBOT")
+        Tags.of(self).add(key="PROJECT", value=PROJECT_NAME)
 
-        self.project_name = project_name
         self.knowledge_base_bucket = storage.knowledge_base_bucket
 
         self.api_lambda_role = self._create_api_lambda_role()
@@ -28,7 +27,7 @@ class RolesStack(Stack):
         """Role for lambda to access dynamodb and s3"""
         role = iam.Role(
             self,
-            f"{self.project_name}-ApiLambdaRole",
+            f"{PROJECT_NAME}-ApiLambdaRole",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
             description="Role for API Gateway Lambda functions",
         )
@@ -47,7 +46,7 @@ class RolesStack(Stack):
         """
         role = iam.Role(
             self,
-            f"{self.project_name}-KnowledgeBaseServiceRole",
+            f"{PROJECT_NAME}-KnowledgeBaseServiceRole",
             assumed_by=iam.ServicePrincipal("bedrock.amazonaws.com"),
             description="Service role for Bedrock Knowledge Base to access resources",
         )
@@ -124,9 +123,9 @@ class RolesStack(Stack):
     def _create_processing_lambda_role(self) -> iam.Role:
         role = iam.Role(
             self,
-            f"{self.project_name}-ProcessingLambdaRole",
+            f"{PROJECT_NAME}-ProcessingLambdaRole",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
-            description="Role for processing lambdas that interact with bedrock, s3 and dynamodb",
+            description="Role for processing lambdas that interact with bedrock",
         )
 
         role.add_to_policy(
