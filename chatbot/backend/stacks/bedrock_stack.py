@@ -2,6 +2,7 @@
 
 from aws_cdk import Stack, aws_iam as iam, custom_resources as cr, Tags
 from constructs import Construct
+from .environment import *
 
 
 class BedrockStack(Stack):
@@ -9,16 +10,14 @@ class BedrockStack(Stack):
         self,
         scope: Construct,
         construct_id: str,
-        project_name: str,
         storage: Stack,
         roles: Stack,
         **kwargs,
     ):
         super().__init__(scope, construct_id, **kwargs)
 
-        Tags.of(self).add(key="PROJECT", value="CHATBOT")
+        Tags.of(self).add(key="PROJECT", value=PROJECT_NAME)
 
-        self.project_name = project_name
         self.storage = storage
         self.roles = roles
 
@@ -28,7 +27,7 @@ class BedrockStack(Stack):
         self.data_source = self._create_data_source()
 
     def _create_vector_bucket(self) -> cr.AwsCustomResource:
-        self.vector_bucket_name = f"{self.project_name}-vector-bucket"
+        self.vector_bucket_name = f"{PROJECT_NAME}-vector-bucket"
 
         create_vector_bucket = cr.AwsCustomResource(
             self,
@@ -114,7 +113,7 @@ class BedrockStack(Stack):
         return create_vector_index
 
     def _create_knowledge_base(self) -> cr.AwsCustomResource:
-        knowledge_base_name = f"{self.project_name}-knowledge-base-{self.account}"
+        knowledge_base_name = f"{PROJECT_NAME}-knowledge-base-{self.account}"
 
         create_kb = cr.AwsCustomResource(
             self,
