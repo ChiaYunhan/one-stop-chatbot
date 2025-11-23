@@ -257,7 +257,7 @@ This application uses several AWS services. Estimated costs for light usage:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This is an open-source learning project designed to help developers understand full-stack development, RAG, and AWS technologies.
+This is a personal learning project to explore full-stack development, RAG, and AWS technologies.
 
 ---
 
