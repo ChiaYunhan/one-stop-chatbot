@@ -10,6 +10,7 @@ import Sidebar from "./features/sidebar/Sidebar";
 import KnowledgeBase from "./features/knowledgeBase/KnowledgeBase";
 import Chat from "./features/chat/Chat";
 import { getKnowledgeBaseDocuments } from "./features/knowledgeBase/services/KnowledgeBaseApi";
+import { generateUUID } from "./utils/uuid";
 
 function App() {
   const [documentList, setDocumentList] = useState<DocumentObject[]>([]);
@@ -28,7 +29,7 @@ function App() {
   }
 
   function handleCreateNewChat() {
-    const newId = crypto.randomUUID();
+    const newId = generateUUID();
     const newChat: ChatObject = _createChatObject(newId);
     setChats({ ...chats, [newId]: newChat });
     setChatCounter(chatCounter + 1);
@@ -38,7 +39,7 @@ function App() {
 
   function handleDeleteChat(chatId: string) {
     if (chatId === selectedChatId) {
-      const newId = crypto.randomUUID();
+      const newId = generateUUID();
       const newChat = _createChatObject(newId);
       const { [chatId]: _, ...rest } = chats;
 
@@ -93,7 +94,7 @@ function App() {
     console.log("Session expired for chat:", expiredChatId);
 
     // Create a new chat to replace the expired one
-    const newId = crypto.randomUUID();
+    const newId = generateUUID();
     const newChat = _createChatObject(newId);
 
     setChats((prevChats) => {

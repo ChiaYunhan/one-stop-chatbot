@@ -1,6 +1,7 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
 import Modal from "react-modal";
+import { getUploadPresignedUrls } from "../services/KnowledgeBaseApi";
 
 Modal.setAppElement("#root");
 
@@ -42,22 +43,12 @@ function UploadModal() {
     setIsUploading(true);
 
     try {
-      const response = await fetch(
-        "https://xjogjcajp4.execute-api.us-east-1.amazonaws.com/chatbot/documents/uploadpresignedurl",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            files: selectedFiles.map((file) => ({
-              fileName: file.name,
-              fileType: file.type,
-            })),
-          }),
-        }
+      const data = await getUploadPresignedUrls(
+        selectedFiles.map((file) => ({
+          fileName: file.name,
+          fileType: file.type,
+        }))
       );
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
 
       const uploadedFiles: Array<{ fileName: string; key: string }> = [];
 

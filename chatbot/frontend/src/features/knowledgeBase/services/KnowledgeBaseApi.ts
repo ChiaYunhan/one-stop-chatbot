@@ -101,3 +101,20 @@ export const triggerSyncKnowledgeBase = async () => {
 
   return response;
 };
+
+export const getUploadPresignedUrls = async (
+  files: Array<{ fileName: string; fileType: string }>
+) => {
+  const response = await fetch(`${API_BASE_URL}/documents/uploadpresignedurl`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ files }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to get upload URLs");
+  }
+
+  return response.json();
+};

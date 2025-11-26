@@ -3,6 +3,7 @@ import type { ChatObject, MessageObject } from "../../types";
 import MessageList from "./components/MessageList";
 import { getAssistantResponse } from "./services/ChatApi";
 import ChatInputBox from "./components/InputBox";
+import { generateUUID } from "../../utils/uuid";
 
 interface ChatProps {
   selectedChat: ChatObject;
@@ -29,7 +30,7 @@ export default function Chat({
 
   async function handleUserNewMessage(chatId: string, content: string) {
     const newMessage: MessageObject = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       role: "USER",
       content: content,
       timestamp: new Date(),
