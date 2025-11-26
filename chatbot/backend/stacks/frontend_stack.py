@@ -2,6 +2,7 @@ from aws_cdk import (
     Stack,
     aws_s3 as s3,
     aws_s3_deployment as s3deploy,
+    aws_iam as iam,
     CfnOutput,
     RemovalPolicy,
     Tags,
@@ -61,21 +62,52 @@ class FrontendStack(Stack):
             print(f"Build failed: {e}")
             raise Exception(f"Frontend build failed: {e}")
 
-        # S3 bucket for hosting
+        # Get IP address from context (optional)
+        allowed_ip = self.node.try_get_context("allowed_ip")
+
+        # S3 bucket for hosting with restricted access
         website_bucket = s3.Bucket(
             self,
             f"{PROJECT_NAME}-WebsiteBucket",
             website_index_document="index.html",
             website_error_document="index.html",
-            public_read_access=True,
+            public_read_access=False,  # Changed to False for IP-based access control
             block_public_access=s3.BlockPublicAccess(
                 block_public_acls=True,
-                block_public_policy=False,  # Allow public bucket policies
+                block_public_policy=False,  # Allow bucket policies
                 ignore_public_acls=True,
-                restrict_public_buckets=False,  # Allow public bucket access
+                restrict_public_buckets=False,  # Allow controlled access via bucket policy
             ),
             removal_policy=RemovalPolicy.DESTROY,
         )
+
+        # Add IP-restricted bucket policy
+        if allowed_ip:
+            website_bucket.add_to_resource_policy(
+                iam.PolicyStatement(
+                    sid="AllowIPAccess",
+                    effect=iam.Effect.ALLOW,
+                    principals=[iam.AnyPrincipal()],
+                    actions=["s3:GetObject"],
+                    resources=[f"{website_bucket.bucket_arn}/*"],
+                    conditions={
+                        "IpAddress": {"aws:SourceIp": [allowed_ip]},
+                    },
+                )
+            )
+            print(f"Frontend bucket restricted to IP: {allowed_ip}")
+        else:
+            # Fallback to public access if no IP specified (for backward compatibility)
+            website_bucket.add_to_resource_policy(
+                iam.PolicyStatement(
+                    sid="PublicReadAccess",
+                    effect=iam.Effect.ALLOW,
+                    principals=[iam.AnyPrincipal()],
+                    actions=["s3:GetObject"],
+                    resources=[f"{website_bucket.bucket_arn}/*"],
+                )
+            )
+            print("Warning: No IP address specified. Frontend bucket is publicly accessible.")
 
         # Deploy the built files
         s3deploy.BucketDeployment(

@@ -115,17 +115,48 @@ cdk bootstrap <aws://{account id}/{region}
 
 Deploy all AWS resources using the provided script:
 
+#### Option 1: Deploy with IP Restriction (Recommended for Security)
+
+First, get your current IP address:
+
+```bash
+# Get your public IP address
+curl ifconfig.me
+```
+
+Then deploy with IP restriction to limit frontend access to only your IP:
+
+```bash
+# From the project root directory
+chmod +x deploy.sh
+./deploy.sh --ip YOUR_IP_ADDRESS/32
+
+# Example with actual IP:
+# ./deploy.sh --ip 203.0.113.25/32 or 203.0.113.25
+```
+
+#### Option 2: Deploy without IP Restriction (Public Access)
+
 ```bash
 # From the project root directory
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
-The deployment script will:
+**⚠️ Warning**: Deploying without IP restriction makes the frontend publicly accessible to anyone with the URL.
+
+#### What the deployment script does:
 1. Deploy backend infrastructure (S3, Lambda, API Gateway, Bedrock)
 2. Extract the API Gateway URL
 3. Build and deploy the frontend with the correct API endpoint
-4. Provide you with the final website URL
+4. Optionally restrict frontend S3 bucket access to your IP address
+5. Provide you with the final website URL
+
+#### IP Restriction Details:
+
+- The `/32` suffix means exactly one IP address (CIDR notation)
+- If your IP changes, redeploy with the new IP: `./deploy.sh --ip NEW_IP/32`
+- For multiple IPs or a range, use appropriate CIDR notation (e.g., `/24` for 256 IPs)
 
 ### Step 4: Access Your Application
 

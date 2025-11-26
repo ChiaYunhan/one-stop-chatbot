@@ -6,6 +6,7 @@ from aws_cdk import (
     aws_apigateway as apigateway,
     aws_ssm as ssm,
     aws_logs as logs,
+    aws_iam as iam,
     Duration,
     Tags,
     CfnOutput,
@@ -280,6 +281,34 @@ class ApiGatewayStack(Stack):
         )
         DeleteDocumentPostApiMethod = DeleteDocumentApiResource.add_method(
             "POST", DeleteDocumentFunctionIntegration
+        )
+
+        ############################################
+
+        #        LAMBDA INVOCATION RESTRICTIONS    #
+
+        ############################################
+
+        # Restrict Lambda functions to only be invoked by this API Gateway
+        # This prevents direct invocation bypassing API Gateway
+        source_arn = f"arn:aws:execute-api:{self.region}:{self.account}:{ApiGateWay.rest_api_id}/*/*"
+
+        TriggerIngestDocumentsKnowledgeBase.add_permission(
+            "AllowApiGatewayInvoke",
+            principal=iam.ServicePrincipal("apigateway.amazonaws.com"),
+            source_arn=source_arn,
+        )
+
+        DeleteDocuments.add_permission(
+            "AllowApiGatewayInvoke",
+            principal=iam.ServicePrincipal("apigateway.amazonaws.com"),
+            source_arn=source_arn,
+        )
+
+        QueryKnowledgeBase.add_permission(
+            "AllowApiGatewayInvoke",
+            principal=iam.ServicePrincipal("apigateway.amazonaws.com"),
+            source_arn=source_arn,
         )
 
         ############################################
