@@ -1,25 +1,47 @@
 # Resources
 
-## API
+## API Gateway
 
-| API | Lambda | Description |
-| ----| ---- | ---- |
-| - | GenerateDownloadS3Link | API to download file from s3 bucket (should be used in pdf viewer as well) |
-| - | GenerateUploadDocumentLink | API for users to upload document to be ingested into s3 bucket to be ingested into knowledge base |
-| - | GetDocuments | API to get list of all documents in s3 bucket/knowledge base|
-| - | DeleteDocuments | API to delete documents in s3 bucket and no longer part of knowledge base |
-| - | SendUserChat | API to send user chat to bedrock to perform RAG|
+| Resource Name | Description |
+|---|---|
+| chatbot-RestApi | RESTful API Gateway for all backend operations |
 
+## Lambda Functions
 
-## S3
+| Function Name | Description |
+|---|---|
+| chatbot-ListDocuments | Retrieve all documents with status information |
+| chatbot-GenerateUploadDocumentLink | Create presigned URLs for secure file uploads |
+| chatbot-GenerateDownloadDocumentLink | Generate presigned URLs for document viewing/downloading |
+| chatbot-TriggerIngestDocumentsKnowledgeBase | Sync knowledge base after document uploads |
+| chatbot-DeleteDocuments | Remove documents from S3 and knowledge base |
+| chatbot-QueryKnowledgeBase | Process chat queries using RAG |
+
+## S3 Buckets
+
 | Name  | Description  |
 |---|---|
-| chatbot-document-bucket-{accountId}  | stores all files for the knowledge base |
-| chatbot-vector-bucket | stores vector for the document bucket |
+| chatbot-websitebucket-* | Frontend React application hosting (static website) |
+| chatbot-document-bucket-{accountId} | Stores all files for the knowledge base |
+| chatbot-vector-bucket | Stores vectors for the document bucket (S3 Vectors) |
 
+## Bedrock
 
+| Resource Type | Name/Model | Description |
+|---|---|---|
+| Knowledge Base | chatbot-knowledge-base-{accountId} | Managed RAG service for document retrieval |
+| Foundation Model | amazon.nova-lite-v1:0 | AI model for generating chat responses |
+| Embeddings Model | amazon.titan-embed-text-v2:0 | Text embeddings for document indexing |
 
-## Knowledge Base
-| Name  | Description  |
+## IAM Roles
+
+| Role Name | Description |
 |---|---|
-| chatbot-knowledge-base-{accountId} | The knowledge base |
+| chatbot-ApiLambdaRole | Lambda execution role with least-privilege permissions for S3 and Bedrock operations |
+| chatbot-BedrockKnowledgeBaseRole | Service role for Bedrock Knowledge Base to access S3 |
+
+## Lambda Layers
+
+| Layer Name | Description |
+|---|---|
+| chatbot-Layer | Shared dependencies and utilities for Lambda functions |

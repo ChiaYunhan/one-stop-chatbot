@@ -8,6 +8,14 @@ This **full-stack serverless** chatbot application is a **quick and easy prototy
 
 **⚠️ Important Note**: Chat conversations are session-based only. All chat history will be lost when the page is refreshed or closed.
 
+## 📺 Demo
+
+Watch a walkthrough of the application in action:
+
+![Demo Video](showcase.mp4)
+
+*The demo showcases document upload, knowledge base management, and RAG-powered chat interactions.*
+
 ## ✨ Features
 
 - **🤖 RAG-Powered Chat**: Intelligent responses with source citations from your uploaded documents using Amazon Nova Lite
