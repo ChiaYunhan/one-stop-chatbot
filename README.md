@@ -11,7 +11,8 @@ This **full-stack serverless** chatbot application is a **quick and easy prototy
 ## 📺 Demo
 
 Watch a walkthrough of the application in action (click the image):
-[<img width="1999" height="1206" alt="showcase" src="https://github.com/user-attachments/assets/92545d05-1a17-4951-b465-0535491bbbae" />](https://youtu.be/nDOOd1Yq_JM)
+
+[<img width="512" height="256" alt="showcase" src="https://github.com/user-attachments/assets/92545d05-1a17-4951-b465-0535491bbbae" />](https://youtu.be/nDOOd1Yq_JM)
 
 
 *The demo showcases document upload, knowledge base management, and RAG-powered chat interactions.*
